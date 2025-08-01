@@ -279,6 +279,46 @@ class CommentParser:
         return result
     
     @classmethod
+    def parse_docstring_markers(cls, docstring: str) -> Dict[str, Any]:
+        """
+        解析docstring中的文档标记
+        
+        Args:
+            docstring: docstring内容
+            
+        Returns:
+            包含标记信息的字典
+        """
+        if not docstring:
+            return {}
+        
+        docstring = docstring.strip()
+        result = {
+            'marked': False,
+            'description': None,
+            'category': None,
+            'priority': 0
+        }
+        
+        # 检查简单标记
+        for marker in cls.MARKERS:
+            if re.search(rf'\b{marker}\b', docstring, re.IGNORECASE):
+                result['marked'] = True
+                break
+        
+        # 检查带参数的标记
+        for pattern in cls.PARAM_MARKERS:
+            match = re.search(pattern, docstring, re.IGNORECASE)
+            if match:
+                result['marked'] = True
+                params_str = match.group(1)
+                params = cls._parse_params(params_str)
+                result.update(params)
+                break
+        
+        return result
+    
+    @classmethod
     def _parse_params(cls, params_str: str) -> Dict[str, Any]:
         """解析参数字符串"""
         params = {}
@@ -405,13 +445,21 @@ class PythonParser:
                     # 这里可以解析装饰器参数
                     pass
         
-        # 检查注释标记
+        # 检查注释标记（函数上方的注释）
         if self.enable_comment_markers:
             comment_info = self._get_comment_info(node, source_lines)
             if comment_info['marked']:
                 comment_marked = True
                 category = comment_info.get('category', category)
                 priority = comment_info.get('priority', priority)
+        
+        # 检查docstring中的标记
+        if self.enable_comment_markers and docstring:
+            docstring_info = self.comment_parser.parse_docstring_markers(docstring)
+            if docstring_info['marked']:
+                comment_marked = True
+                category = docstring_info.get('category', category)
+                priority = docstring_info.get('priority', priority)
         
         return FunctionInfo(
             name=node.name,
@@ -461,12 +509,21 @@ class PythonParser:
         priority = 0
         comment_marked = False
         
+        # 检查类上方的注释标记
         if self.enable_comment_markers:
             comment_info = self._get_comment_info(node, source_lines)
             if comment_info['marked']:
                 comment_marked = True
                 category = comment_info.get('category', category)
                 priority = comment_info.get('priority', priority)
+        
+        # 检查docstring中的标记
+        if self.enable_comment_markers and docstring:
+            docstring_info = self.comment_parser.parse_docstring_markers(docstring)
+            if docstring_info['marked']:
+                comment_marked = True
+                category = docstring_info.get('category', category)
+                priority = docstring_info.get('priority', priority)
         
         return ClassInfo(
             name=node.name,

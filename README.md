@@ -33,6 +33,8 @@ def process_data(data: list) -> dict:
 
 ### 2. 使用注释标记（推荐用于现有项目）
 
+#### 方式一：函数/类上方的注释标记
+
 ```python
 # @doc_me(description="数据处理函数", category="核心功能")
 def process_data(data: list) -> dict:
@@ -46,6 +48,33 @@ class UserManager:
     # @doc
     def add_user(self, user_id: str, name: str) -> bool:
         """添加用户"""
+        pass
+```
+
+#### 方式二：Docstring内部的标记（推荐）
+
+```python
+def process_data(data: list) -> dict:
+    """
+    处理数据并返回结果
+    
+    @doc_me(description="数据处理函数", category="核心功能")
+    """
+    return {"result": data}
+
+class UserManager:
+    """
+    用户管理类
+    
+    @api(description="用户管理类", category="用户管理")
+    """
+    
+    def add_user(self, user_id: str, name: str) -> bool:
+        """
+        添加用户
+        
+        @doc
+        """
         pass
 ```
 
@@ -106,6 +135,7 @@ def my_function():
 
 #### 简单标记
 
+**上方注释方式**：
 ```python
 # @doc
 def my_function():
@@ -128,8 +158,28 @@ def public_function():
     pass
 ```
 
+**Docstring内部方式（推荐）**：
+```python
+def my_function():
+    """
+    这是一个函数
+    
+    @doc
+    """
+    pass
+
+class MyClass:
+    """
+    这是一个类
+    
+    @doc_me
+    """
+    pass
+```
+
 #### 带参数的标记
 
+**上方注释方式**：
 ```python
 # @doc(description="自定义描述", category="核心功能", priority=1)
 def my_function():
@@ -137,6 +187,25 @@ def my_function():
 
 # @doc_me(description="用户管理类", category="用户管理", priority=2)
 class UserManager:
+    pass
+```
+
+**Docstring内部方式（推荐）**：
+```python
+def my_function():
+    """
+    这是一个函数
+    
+    @doc(description="自定义描述", category="核心功能", priority=1)
+    """
+    pass
+
+class UserManager:
+    """
+    用户管理类
+    
+    @doc_me(description="用户管理类", category="用户管理", priority=2)
+    """
     pass
 ```
 
