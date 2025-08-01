@@ -1,0 +1,31 @@
+# {{ project_name }} 文档索引
+
+## 📚 文档导航
+
+### 概览
+- [项目概览](./overview.md)
+
+### 模块文档
+
+{% for module in modules %}
+- [{{ module.name }}](./{{ module.name }}.md)
+{% endfor %}
+
+## 🔍 快速搜索
+
+### 按功能分类
+
+{% for category, items in categories.items() %}
+#### {{ category }}
+
+{% for module_name, item_name, item_type in items %}
+- {% if item_type == "function" %}🔧{% else %}🏗️{% endif %} [{{ item_name }}](./{{ module_name }}.md#{{ item_name.lower() }}) ({{ module_name }})
+{% endfor %}
+
+{% endfor %}
+
+{% if config.footer %}
+---
+
+*{{ config.footer }}*
+{% endif %} 

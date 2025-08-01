@@ -1,0 +1,222 @@
+# {{ module.name }} 模块
+
+## 📖 模块概览
+
+{{ module.docstring or "该模块暂无描述" }}
+
+## 📦 导入
+
+```python
+{{ imports_formatted }}
+```
+
+{% if module.functions %}
+## 🔧 函数
+
+{% for func in module.functions %}
+### {{ func.name }}
+
+{% if func.description %}
+**描述**: {{ func.description }}
+
+{% endif %}
+{% if func.category %}
+**分类**: {{ func.category }}
+
+{% endif %}
+{% if func.priority %}
+**优先级**: {{ func.priority }}
+
+{% endif %}
+**函数签名**:
+```python
+{{ func.signature }}
+```
+
+{% if func.parameters %}
+**参数**:
+| 参数名 | 类型 | 默认值 | 描述 |
+|--------|------|--------|------|
+{% for param in func.parameters %}
+| {{ param.name }} | {{ param.type }} | {{ param.default }} | {{ param.description }} |
+{% endfor %}
+
+{% endif %}
+{% if func.return_type %}
+**返回值**:
+- **类型**: `{{ func.return_type }}`
+- **描述**: {{ func.return_description }}
+
+{% endif %}
+{% if func.docstring %}
+**文档字符串**:
+```
+{{ func.docstring }}
+```
+
+{% endif %}
+**源代码**:
+```python
+{{ func.source_code }}
+```
+
+{% if not loop.last %}
+---
+
+{% endif %}
+{% endfor %}
+{% endif %}
+
+{% if module.classes %}
+## 🏗️ 类
+
+{% for cls in module.classes %}
+### {{ cls.name }}
+
+{% if cls.description %}
+**描述**: {{ cls.description }}
+
+{% endif %}
+{% if cls.category %}
+**分类**: {{ cls.category }}
+
+{% endif %}
+{% if cls.priority %}
+**优先级**: {{ cls.priority }}
+
+{% endif %}
+**类签名**:
+```python
+class {{ cls.name }}
+```
+
+{% if cls.docstring %}
+**文档字符串**:
+```
+{{ cls.docstring }}
+```
+
+{% endif %}
+{% if cls.bases %}
+**基类**: {{ cls.bases|join(', ') }}
+
+{% endif %}
+{% if cls.methods %}
+**方法**:
+
+{% for method in cls.methods %}
+#### {{ method.name }}
+
+{% if method.description %}
+**描述**: {{ method.description }}
+
+{% endif %}
+{% if method.category %}
+**分类**: {{ method.category }}
+
+{% endif %}
+**方法签名**:
+```python
+{{ method.signature }}
+```
+
+{% if method.parameters %}
+**参数**:
+| 参数名 | 类型 | 默认值 | 描述 |
+|--------|------|--------|------|
+{% for param in method.parameters %}
+| {{ param.name }} | {{ param.type }} | {{ param.default }} | {{ param.description }} |
+{% endfor %}
+
+{% endif %}
+{% if method.return_type %}
+**返回值**:
+- **类型**: `{{ method.return_type }}`
+- **描述**: {{ method.return_description }}
+
+{% endif %}
+{% if method.docstring %}
+**文档字符串**:
+```
+{{ method.docstring }}
+```
+
+{% endif %}
+**源代码**:
+```python
+{{ method.source_code }}
+```
+
+{% if not loop.last %}
+
+{% endif %}
+{% endfor %}
+{% endif %}
+
+{% if cls.source_code %}
+#### 源代码
+
+```python
+{{ cls.source_code }}
+```
+
+{% endif %}
+{% if not loop.last %}
+
+---
+
+{% endif %}
+{% endfor %}
+{% endif %}
+
+{% if module.undocumented_functions %}
+## 未文档化的函数
+
+{% for func in module.undocumented_functions %}
+### {{ func.name }}
+
+**函数签名**:
+```python
+{{ func.signature }}
+```
+
+{% if func.parameters %}
+**参数**:
+| 参数名 | 类型 | 默认值 | 描述 |
+|--------|------|--------|------|
+{% for param in func.parameters %}
+| {{ param.name }} | {{ param.type }} | {{ param.default }} | {{ param.description }} |
+{% endfor %}
+
+{% endif %}
+{% if func.return_type %}
+**返回值**:
+- **类型**: `{{ func.return_type }}`
+- **描述**: {{ func.return_description }}
+
+{% endif %}
+{% if func.docstring %}
+**文档字符串**:
+```
+{{ func.docstring }}
+```
+
+{% endif %}
+**源代码**:
+```python
+{{ func.source_code }}
+```
+
+{% if not loop.last %}
+
+---
+
+{% endif %}
+{% endfor %}
+{% endif %}
+
+---
+
+{% if config.footer %}
+*{{ config.footer }}*
+{% endif %} 

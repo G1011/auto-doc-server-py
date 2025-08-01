@@ -1,0 +1,5 @@
+click
+jinja2
+markdown
+pyyaml
+watchdog 

@@ -1,0 +1,64 @@
+import { defineConfig } from 'vitepress'
+
+export default defineConfig({
+  title: '{{ config.title }}',
+  description: '{{ config.description }}',
+  lang: '{{ config.lang }}',
+  
+  themeConfig: {
+    siteTitle: '{{ config.site_title }}',
+    nav: [
+      { text: '首页', link: '/' },
+      { text: '生成的文档', link: '/generated/' },
+      {% if config.github_url %}
+      { text: 'GitHub', link: '{{ config.github_url }}' }
+      {% endif %}
+    ],
+    
+    sidebar: {
+      '/generated/': [
+        {
+          text: '生成的文档',
+          items: [
+            { text: '文档首页', link: '/generated/' },
+            {% for doc in docs %}
+            { text: '{{ doc.title }}', link: '/generated/{{ doc.route }}' },
+            {% endfor %}
+          ]
+        }
+      ]
+    },
+    
+    {% if config.social_links %}
+    socialLinks: [
+      {% for link in config.social_links %}
+      { icon: '{{ link.icon }}', link: '{{ link.url }}' },
+      {% endfor %}
+    ],
+    {% endif %}
+    
+    footer: {
+      message: '{{ config.footer.message }}',
+      copyright: '{{ config.footer.copyright }}'
+    },
+    
+    search: {
+      provider: 'local'
+    }
+  },
+  
+  markdown: {
+    theme: '{{ config.markdown.theme }}',
+    lineNumbers: {{ 'true' if config.markdown.line_numbers else 'false' }},
+    toc: {
+      level: [{{ config.markdown.toc_levels | join(', ') }}]
+    }
+  },
+  
+  vite: {
+    server: {
+      port: {{ config.vite.port }},
+      host: '{{ config.vite.host }}'
+    }
+  }
+}) 

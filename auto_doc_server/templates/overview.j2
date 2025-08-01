@@ -1,0 +1,39 @@
+# {{ project_name }} 项目文档
+
+## 📋 项目概览
+
+本项目包含以下模块：
+
+{% for module in modules %}
+- [{{ module.name }}](./{{ module.name }}.md) - {{ module.functions|length }} 个函数, {{ module.classes|length }} 个类
+{% endfor %}
+
+### 📊 统计信息
+
+- **模块数量**: {{ modules|length }}
+- **函数数量**: {{ stats.total_functions }}
+- **类数量**: {{ stats.total_classes }}
+- **文档化函数**: {{ stats.documented_functions }}
+- **文档化类**: {{ stats.documented_classes }}
+- **生成时间**: {{ generation_time }}
+
+### 📁 模块列表
+
+{% for module in modules %}
+- [{{ module.name }}](./{{ module.name }}.md) - {{ module.functions|length }} 个函数, {{ module.classes|length }} 个类
+{% endfor %}
+
+## 🚀 快速开始
+
+请查看各个模块的详细文档以了解具体功能。
+
+## 📝 文档说明
+
+- 所有公开的API都有详细的参数说明
+- 包含完整的源代码示例
+- 支持多种注释格式（Google、NumPy等）
+
+{% if config.footer %}
+---
+{{ config.footer }}
+{% endif %} 
