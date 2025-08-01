@@ -54,6 +54,9 @@ Thumbs.db
 generated_docs/
 *.log
 
+# VitePress cache
+web/docs/.vitepress/cache/
+
 # Temporary files
 *.tmp
 *.temp 
