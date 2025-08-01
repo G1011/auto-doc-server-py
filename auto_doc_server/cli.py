@@ -19,15 +19,22 @@ def cli():
 @click.option('--config', '-c', help='配置文件路径')
 @click.option('--include-all', is_flag=True, help='包含所有函数和类')
 @click.option('--exclude', multiple=True, help='排除的文件模式')
-def generate(project_path, output, config, include_all, exclude):
+@click.option('--enable-comment-markers', is_flag=True, default=True, help='启用注释标记功能')
+@click.option('--disable-comment-markers', is_flag=True, help='禁用注释标记功能')
+def generate(project_path, output, config, include_all, exclude, enable_comment_markers, disable_comment_markers):
     """生成文档"""
     try:
+        # 处理注释标记选项
+        if disable_comment_markers:
+            enable_comment_markers = False
+        
         generator = AutoDocGenerator(
             project_path=project_path,
             output_path=output,
             config_path=config,
             include_all=include_all,
-            exclude_patterns=list(exclude)
+            exclude_patterns=list(exclude),
+            enable_comment_markers=enable_comment_markers
         )
         generator.generate()
         click.echo("✅ 文档生成完成!")
@@ -39,13 +46,20 @@ def generate(project_path, output, config, include_all, exclude):
 @click.argument('project_path', type=click.Path(exists=True))
 @click.option('--output', '-o', default='./docs', help='输出目录')
 @click.option('--config', '-c', help='配置文件路径')
-def watch(project_path, output, config):
+@click.option('--enable-comment-markers', is_flag=True, default=True, help='启用注释标记功能')
+@click.option('--disable-comment-markers', is_flag=True, help='禁用注释标记功能')
+def watch(project_path, output, config, enable_comment_markers, disable_comment_markers):
     """监听文件变化并自动重新生成"""
     try:
+        # 处理注释标记选项
+        if disable_comment_markers:
+            enable_comment_markers = False
+        
         generator = AutoDocGenerator(
             project_path=project_path,
             output_path=output,
-            config_path=config
+            config_path=config,
+            enable_comment_markers=enable_comment_markers
         )
         generator.watch_and_generate()
     except KeyboardInterrupt:

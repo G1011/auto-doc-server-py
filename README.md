@@ -20,7 +20,7 @@ python3 start.py
 
 ## 📝 使用方法
 
-### 1. 在代码中使用装饰器
+### 1. 使用装饰器（推荐用于新项目）
 
 ```python
 from auto_doc_server import doc_me
@@ -31,13 +31,38 @@ def process_data(data: list) -> dict:
     return {"result": data}
 ```
 
-### 2. 生成文档
+### 2. 使用注释标记（推荐用于现有项目）
 
-```bash
-python3 start.py
+```python
+# @doc_me(description="数据处理函数", category="核心功能")
+def process_data(data: list) -> dict:
+    """处理数据并返回结果"""
+    return {"result": data}
+
+# @api(description="用户管理类", category="用户管理")
+class UserManager:
+    """用户管理类"""
+    
+    # @doc
+    def add_user(self, user_id: str, name: str) -> bool:
+        """添加用户"""
+        pass
 ```
 
-### 3. 查看文档
+### 3. 生成文档
+
+```bash
+# 使用默认设置（启用注释标记）
+python3 start.py
+
+# 禁用注释标记
+python3 -m auto_doc_server.cli generate ./my_project --disable-comment-markers
+
+# 包含所有函数和类
+python3 -m auto_doc_server.cli generate ./my_project --include-all
+```
+
+### 4. 查看文档
 
 访问 http://localhost:3000
 
@@ -45,9 +70,10 @@ python3 start.py
 
 - 🐍 **Python原生支持**: 专为Python项目设计
 - 📝 **智能解析**: 自动识别代码结构和注释
-- 🎯 **装饰器控制**: 精确控制文档生成范围
+- 🎯 **双重标记**: 支持装饰器和注释标记两种方式
 - 🌐 **现代化界面**: 基于VitePress的美观界面
 - ⚡ **一键启动**: 简化部署流程
+- 🔧 **现有项目友好**: 无需修改代码结构即可生成文档
 
 ## 📁 项目结构
 
@@ -58,12 +84,15 @@ auto-doc-server-py/
 ├── web/                      # VitePress界面
 ├── start.py                  # 启动脚本
 ├── requirements.txt          # Python依赖
+├── COMMENT_MARKERS.md        # 注释标记详细说明
 └── README.md                 # 说明文档
 ```
 
-## 🔧 装饰器说明
+## 🔧 标记方式说明
 
-### @doc_me
+### 装饰器方式
+
+#### @doc_me
 
 标记函数或类需要生成文档：
 
@@ -73,23 +102,41 @@ def my_function():
     pass
 ```
 
-### @doc_class
+### 注释标记方式
 
-专门用于标记类：
+#### 简单标记
 
 ```python
-@doc_class(description="类描述", category="分类")
+# @doc
+def my_function():
+    pass
+
+# @doc_me
 class MyClass:
+    pass
+
+# @document
+def another_function():
+    pass
+
+# @api
+def public_api():
+    pass
+
+# @public
+def public_function():
     pass
 ```
 
-### @doc_function
-
-专门用于标记函数：
+#### 带参数的标记
 
 ```python
-@doc_function(description="函数描述", category="分类")
+# @doc(description="自定义描述", category="核心功能", priority=1)
 def my_function():
+    pass
+
+# @doc_me(description="用户管理类", category="用户管理", priority=2)
+class UserManager:
     pass
 ```
 
@@ -97,18 +144,9 @@ def my_function():
 
 - ✅ 自动解析Python代码
 - ✅ 装饰器标记的文档化
+- ✅ 注释标记的文档化
 - ✅ 参数表格和类型注解
-- ✅ 代码语法高亮
-- ✅ 完整的源代码展示
-- ✅ 多种注释格式支持
-
-## 🛠️ 技术栈
-
-- **后端**: Python 3.8+, AST解析
-- **前端**: VitePress, Vue 3
-- **构建**: Vite
-- **样式**: 内置主题
-
-## �� 许可证
-
-MIT License 
+- ✅ 多种文档风格支持
+- ✅ 分类和优先级管理
+- ✅ 现代化Web界面
+- ✅ 实时文件监听 

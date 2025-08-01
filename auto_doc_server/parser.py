@@ -21,6 +21,7 @@ class FunctionInfo:
     line_number: int
     category: Optional[str] = None
     priority: int = 0
+    comment_marked: bool = False  # 是否通过注释标记
 
 @dataclass
 class ClassInfo:
@@ -33,6 +34,7 @@ class ClassInfo:
     line_number: int
     category: Optional[str] = None
     priority: int = 0
+    comment_marked: bool = False  # 是否通过注释标记
 
 @dataclass
 class ModuleInfo:
@@ -216,12 +218,94 @@ class DocstringParser:
         
         return raises
 
+class CommentParser:
+    """注释解析器 - 用于解析注释中的文档标记"""
+    
+    # 支持的注释标记模式
+    MARKERS = [
+        r'@doc',           # @doc
+        r'@doc_me',        # @doc_me
+        r'@document',      # @document
+        r'@api',           # @api
+        r'@public',        # @public
+    ]
+    
+    # 带参数的标记模式
+    PARAM_MARKERS = [
+        r'@doc\s*\(([^)]*)\)',           # @doc(description="xxx", category="xxx", priority=1)
+        r'@doc_me\s*\(([^)]*)\)',        # @doc_me(description="xxx", category="xxx", priority=1)
+        r'@document\s*\(([^)]*)\)',      # @document(description="xxx", category="xxx", priority=1)
+        r'@api\s*\(([^)]*)\)',           # @api(description="xxx", category="xxx", priority=1)
+    ]
+    
+    @classmethod
+    def parse_comment_markers(cls, comment: str) -> Dict[str, Any]:
+        """
+        解析注释中的文档标记
+        
+        Args:
+            comment: 注释内容
+            
+        Returns:
+            包含标记信息的字典
+        """
+        if not comment:
+            return {}
+        
+        comment = comment.strip()
+        result = {
+            'marked': False,
+            'description': None,
+            'category': None,
+            'priority': 0
+        }
+        
+        # 检查简单标记
+        for marker in cls.MARKERS:
+            if re.search(rf'\b{marker}\b', comment, re.IGNORECASE):
+                result['marked'] = True
+                break
+        
+        # 检查带参数的标记
+        for pattern in cls.PARAM_MARKERS:
+            match = re.search(pattern, comment, re.IGNORECASE)
+            if match:
+                result['marked'] = True
+                params_str = match.group(1)
+                params = cls._parse_params(params_str)
+                result.update(params)
+                break
+        
+        return result
+    
+    @classmethod
+    def _parse_params(cls, params_str: str) -> Dict[str, Any]:
+        """解析参数字符串"""
+        params = {}
+        
+        # 匹配 key=value 格式的参数
+        param_pattern = r'(\w+)\s*=\s*["\']([^"\']*)["\']'
+        matches = re.findall(param_pattern, params_str)
+        
+        for key, value in matches:
+            if key == 'priority':
+                try:
+                    params[key] = int(value)
+                except ValueError:
+                    params[key] = 0
+            else:
+                params[key] = value
+        
+        return params
+
 class PythonParser:
     """Python代码解析器"""
     
-    def __init__(self, include_all: bool = False):
+    def __init__(self, include_all: bool = False, enable_comment_markers: bool = True):
         self.include_all = include_all
+        self.enable_comment_markers = enable_comment_markers
         self.docstring_parser = DocstringParser()
+        self.comment_parser = CommentParser()
     
     def parse_file(self, file_path: Path) -> ModuleInfo:
         """解析Python文件"""
@@ -309,14 +393,25 @@ class PythonParser:
         # 解析文档字符串
         docstring = ast.get_docstring(node) or ""
         
-        # 检查是否有装饰器标记
+        # 检查装饰器标记
         category = None
         priority = 0
+        comment_marked = False
+        
+        # 检查装饰器
         for decorator in node.decorator_list:
             if isinstance(decorator, ast.Call) and isinstance(decorator.func, ast.Name):
                 if decorator.func.id == 'doc_me':
                     # 这里可以解析装饰器参数
                     pass
+        
+        # 检查注释标记
+        if self.enable_comment_markers:
+            comment_info = self._get_comment_info(node, source_lines)
+            if comment_info['marked']:
+                comment_marked = True
+                category = comment_info.get('category', category)
+                priority = comment_info.get('priority', priority)
         
         return FunctionInfo(
             name=node.name,
@@ -327,7 +422,8 @@ class PythonParser:
             source_code=source_code,
             line_number=node.lineno,
             category=category,
-            priority=priority
+            priority=priority,
+            comment_marked=comment_marked
         )
     
     def _parse_class(self, node: ast.ClassDef, content: str) -> ClassInfo:
@@ -360,14 +456,61 @@ class PythonParser:
         # 解析文档字符串
         docstring = ast.get_docstring(node) or ""
         
+        # 检查注释标记
+        category = None
+        priority = 0
+        comment_marked = False
+        
+        if self.enable_comment_markers:
+            comment_info = self._get_comment_info(node, source_lines)
+            if comment_info['marked']:
+                comment_marked = True
+                category = comment_info.get('category', category)
+                priority = comment_info.get('priority', priority)
+        
         return ClassInfo(
             name=node.name,
             docstring=docstring,
             bases=bases,
             methods=methods,
             source_code=source_code,
-            line_number=node.lineno
+            line_number=node.lineno,
+            category=category,
+            priority=priority,
+            comment_marked=comment_marked
         )
+    
+    def _get_comment_info(self, node: ast.AST, source_lines: List[str]) -> Dict[str, Any]:
+        """获取节点前的注释信息"""
+        line_number = node.lineno - 1  # 转换为0索引
+        
+        # 查找节点前的注释
+        comments = []
+        current_line = line_number - 1
+        
+        # 向上查找连续的注释行
+        while current_line >= 0:
+            line = source_lines[current_line].strip()
+            
+            # 跳过空行
+            if not line:
+                current_line -= 1
+                continue
+            
+            # 检查是否是注释
+            if line.startswith('#'):
+                comments.insert(0, line[1:].strip())  # 移除#号
+                current_line -= 1
+            else:
+                break
+        
+        # 解析所有注释
+        for comment in comments:
+            comment_info = self.comment_parser.parse_comment_markers(comment)
+            if comment_info['marked']:
+                return comment_info
+        
+        return {'marked': False}
     
     def _get_type_annotation(self, annotation) -> Optional[str]:
         """获取类型注解"""
@@ -431,8 +574,12 @@ class PythonParser:
         if hasattr(obj, '_doc_me') and obj._doc_me:
             return True
         
-        # 检查是否是公开的API（不以_开头）
-        if hasattr(obj, 'name'):
+        # 检查是否有注释标记
+        if hasattr(obj, 'comment_marked') and obj.comment_marked:
+            return True
+        
+        # 如果没有启用注释标记功能，则检查是否是公开的API（不以_开头）
+        if not self.enable_comment_markers and hasattr(obj, 'name'):
             return not obj.name.startswith('_')
         
         return False 

@@ -18,19 +18,24 @@ class AutoDocGenerator:
         output_path: str = "./docs",
         config_path: Optional[str] = None,
         include_all: bool = False,
-        exclude_patterns: Optional[List[str]] = None
+        exclude_patterns: Optional[List[str]] = None,
+        enable_comment_markers: bool = True
     ):
         self.project_path = Path(project_path)
         self.output_path = Path(output_path)
         self.config_path = Path(config_path) if config_path else None
         self.include_all = include_all
         self.exclude_patterns = exclude_patterns or []
+        self.enable_comment_markers = enable_comment_markers
         
         # 加载配置
         self.config = self._load_config()
         
         # 初始化组件
-        self.parser = PythonParser(include_all=self.include_all)
+        self.parser = PythonParser(
+            include_all=self.include_all,
+            enable_comment_markers=self.enable_comment_markers
+        )
         self.markdown_generator = TemplateMarkdownGenerator(
             output_path=str(self.output_path)
         )
