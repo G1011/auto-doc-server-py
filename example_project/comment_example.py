@@ -10,7 +10,7 @@ def simple_function():
     """这是一个简单的函数，通过注释标记来生成文档"""
     return "Hello, World!"
 
-# @doc_me(description="计算两个数的和", category="数学运算", priority=1)
+# @doc_util(description="计算两个数的和", category="数学运算", priority=1)
 def add_numbers(a: int, b: int) -> int:
     """
     计算两个整数的和
@@ -24,7 +24,7 @@ def add_numbers(a: int, b: int) -> int:
     """
     return a + b
 
-# @document(description="字符串处理工具", category="文本处理")
+# @doc_component(description="字符串处理工具", category="文本处理")
 def process_string(text: str, uppercase: bool = False) -> str:
     """
     处理字符串
@@ -40,7 +40,7 @@ def process_string(text: str, uppercase: bool = False) -> str:
         return text.upper()
     return text.lower()
 
-# @api(description="用户管理类", category="用户管理", priority=2)
+# @doc_api(description="用户管理类", category="用户管理", priority=2)
 class UserManager:
     """用户管理类，用于处理用户相关的操作"""
     
@@ -64,7 +64,7 @@ class UserManager:
             return True
         return False
     
-    # @public(description="获取用户信息", category="用户查询")
+    # @doc_public(description="获取用户信息", category="用户查询")
     def get_user(self, user_id: str) -> str:
         """
         获取用户信息
@@ -77,7 +77,7 @@ class UserManager:
         """
         return self.users.get(user_id)
 
-# @doc_me(description="配置管理类", category="系统配置")
+# @doc_component(description="配置管理类", category="系统配置")
 class ConfigManager:
     """配置管理类"""
     
@@ -85,14 +85,14 @@ class ConfigManager:
         self.config_file = config_file
         self.config = {}
     
-    # @api
+    # @doc_api
     def load_config(self) -> dict:
         """加载配置文件"""
         # 模拟加载配置
         self.config = {"debug": True, "port": 8080}
         return self.config
     
-    # @document
+    # @doc_util
     def get_config(self, key: str, default=None):
         """获取配置值"""
         return self.config.get(key, default)
@@ -102,7 +102,7 @@ def internal_helper():
     """内部辅助函数，不会被生成文档"""
     pass
 
-# @doc(description="数据验证工具", category="数据验证")
+# @doc_util(description="数据验证工具", category="数据验证")
 def validate_email(email: str) -> bool:
     """
     验证邮箱格式
@@ -117,7 +117,7 @@ def validate_email(email: str) -> bool:
     pattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
     return bool(re.match(pattern, email))
 
-# @api(description="文件操作工具", category="文件处理", priority=3)
+# @doc_api(description="文件操作工具", category="文件处理", priority=3)
 def read_file_content(file_path: str) -> str:
     """
     读取文件内容

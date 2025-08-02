@@ -224,18 +224,19 @@ class CommentParser:
     # 支持的注释标记模式
     MARKERS = [
         r'@doc',           # @doc
-        r'@doc_me',        # @doc_me
-        r'@document',      # @document
-        r'@api',           # @api
-        r'@public',        # @public
+        r'@doc_util',      # @doc_util
+        r'@doc_component', # @doc_component
+        r'@doc_api',       # @doc_api
+        r'@doc_public',    # @doc_public
     ]
     
     # 带参数的标记模式
     PARAM_MARKERS = [
         r'@doc\s*\(([^)]*)\)',           # @doc(description="xxx", category="xxx", priority=1)
-        r'@doc_me\s*\(([^)]*)\)',        # @doc_me(description="xxx", category="xxx", priority=1)
-        r'@document\s*\(([^)]*)\)',      # @document(description="xxx", category="xxx", priority=1)
-        r'@api\s*\(([^)]*)\)',           # @api(description="xxx", category="xxx", priority=1)
+        r'@doc_util\s*\(([^)]*)\)',      # @doc_util(description="xxx", category="xxx", priority=1)
+        r'@doc_component\s*\(([^)]*)\)', # @doc_component(description="xxx", category="xxx", priority=1)
+        r'@doc_api\s*\(([^)]*)\)',       # @doc_api(description="xxx", category="xxx", priority=1)
+        r'@doc_public\s*\(([^)]*)\)',    # @doc_public(description="xxx", category="xxx", priority=1)
     ]
     
     @classmethod

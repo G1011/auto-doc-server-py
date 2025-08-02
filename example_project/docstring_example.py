@@ -17,7 +17,7 @@ def add_numbers(a: int, b: int) -> int:
     """
     计算两个整数的和
     
-    @doc_me(description="计算两个数的和", category="数学运算", priority=1)
+    @doc_util(description="计算两个数的和", category="数学运算", priority=1)
     
     Args:
         a: 第一个整数
@@ -32,7 +32,7 @@ def process_string(text: str, uppercase: bool = False) -> str:
     """
     处理字符串
     
-    @document(description="字符串处理工具", category="文本处理")
+    @doc_component(description="字符串处理工具", category="文本处理")
     
     Args:
         text: 要处理的字符串
@@ -49,7 +49,7 @@ class UserManager:
     """
     用户管理类，用于处理用户相关的操作
     
-    @api(description="用户管理类", category="用户管理", priority=2)
+    @doc_api(description="用户管理类", category="用户管理", priority=2)
     """
     
     def __init__(self):
@@ -60,13 +60,6 @@ class UserManager:
         添加用户
         
         @doc
-        
-        Args:
-            user_id: 用户ID
-            name: 用户姓名
-            
-        Returns:
-            是否添加成功
         """
         if user_id not in self.users:
             self.users[user_id] = name
@@ -77,7 +70,7 @@ class UserManager:
         """
         获取用户信息
         
-        @public(description="获取用户信息", category="用户查询")
+        @doc_public(description="获取用户信息", category="用户查询")
         
         Args:
             user_id: 用户ID
@@ -91,7 +84,7 @@ class ConfigManager:
     """
     配置管理类
     
-    @doc_me(description="配置管理类", category="系统配置")
+    @doc_component(description="配置管理类", category="系统配置")
     """
     
     def __init__(self, config_file: str):
@@ -102,7 +95,7 @@ class ConfigManager:
         """
         加载配置文件
         
-        @api
+        @doc_api
         """
         # 模拟加载配置
         self.config = {"debug": True, "port": 8080}
@@ -112,7 +105,7 @@ class ConfigManager:
         """
         获取配置值
         
-        @document
+        @doc_util
         """
         return self.config.get(key, default)
 
@@ -125,7 +118,7 @@ def validate_email(email: str) -> bool:
     """
     验证邮箱格式
     
-    @doc(description="数据验证工具", category="数据验证")
+    @doc_util(description="数据验证工具", category="数据验证")
     
     Args:
         email: 要验证的邮箱地址
@@ -141,7 +134,7 @@ def read_file_content(file_path: str) -> str:
     """
     读取文件内容
     
-    @api(description="文件操作工具", category="文件处理", priority=3)
+    @doc_api(description="文件操作工具", category="文件处理", priority=3)
     
     Args:
         file_path: 文件路径
@@ -159,12 +152,12 @@ def read_file_content(file_path: str) -> str:
         raise FileNotFoundError(f"文件不存在: {file_path}")
 
 # 混合使用：既有上方注释标记，也有docstring标记
-# @doc_me(description="混合标记示例", category="示例", priority=1)
+# @doc_util(description="混合标记示例", category="示例", priority=1)
 def mixed_markers():
     """
     这个函数同时使用了上方注释标记和docstring标记
     
-    @api(description="docstring中的标记", category="混合示例")
+    @doc_api(description="docstring中的标记", category="混合示例")
     
     注意：docstring中的标记会覆盖上方注释的标记
     """

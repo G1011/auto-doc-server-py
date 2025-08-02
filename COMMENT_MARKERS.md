@@ -9,10 +9,10 @@ Auto Doc Server 现在支持通过注释标记来识别需要生成文档的函�
 | 标记 | 含义 | 用途 | 示例 |
 |------|------|------|------|
 | `@doc` | 基础文档标记 | 标记需要生成基础文档的函数或类 | `@doc` |
-| `@doc_me` | 详细文档标记 | 标记需要生成详细文档的函数或类，包含更多信息 | `@doc_me(description="...", category="...")` |
-| `@document` | 完整文档标记 | 标记需要生成完整文档的函数或类，包含所有详细信息 | `@document(description="...", category="...", priority=1)` |
-| `@api` | API接口标记 | 标记公共API接口，通常用于外部调用的函数或类 | `@api(description="...", category="API")` |
-| `@public` | 公共接口标记 | 标记公共接口，通常用于模块间调用的函数或类 | `@public(description="...", category="公共接口")` |
+| `@doc_util` | 工具函数标记 | 标记需要生成详细文档的工具函数或类，包含更多信息 | `@doc_util(description="...", category="...")` |
+| `@doc_component` | 组件标记 | 标记需要生成完整文档的核心组件，包含所有详细信息 | `@doc_component(description="...", category="...", priority=1)` |
+| `@doc_api` | API接口标记 | 标记公共API接口，通常用于外部调用的函数或类 | `@doc_api(description="...", category="API")` |
+| `@doc_public` | 公共接口标记 | 标记公共接口，通常用于模块间调用的函数或类 | `@doc_public(description="...", category="公共接口")` |
 
 ### 标记详细说明
 
@@ -31,8 +31,8 @@ def helper_function():
     pass
 ```
 
-#### @doc_me - 详细文档标记
-- **含义**: 详细文档标记，表示该函数或类需要生成详细文档
+#### @doc_util - 工具函数标记
+- **含义**: 工具函数标记，表示该函数或类需要生成详细文档
 - **用途**: 适用于重要的业务逻辑函数或核心类
 - **特点**: 生成详细的文档，包含描述、分类、优先级等信息
 - **示例**:
@@ -41,13 +41,13 @@ def process_user_data(user_data: dict) -> dict:
     """
     处理用户数据
     
-    @doc_me(description="用户数据处理函数", category="用户管理", priority=1)
+    @doc_util(description="用户数据处理函数", category="用户管理", priority=1)
     """
     pass
 ```
 
-#### @document - 完整文档标记
-- **含义**: 完整文档标记，表示该函数或类需要生成最完整的文档
+#### @doc_component - 组件标记
+- **含义**: 组件标记，表示该函数或类需要生成最完整的文档
 - **用途**: 适用于核心功能、复杂算法或重要的公共接口
 - **特点**: 生成最完整的文档，包含所有可能的详细信息
 - **示例**:
@@ -56,12 +56,12 @@ def complex_algorithm(data: list) -> dict:
     """
     复杂算法实现
     
-    @document(description="核心算法", category="算法", priority=2)
+    @doc_component(description="核心算法实现", category="算法", priority=2)
     """
     pass
 ```
 
-#### @api - API接口标记
+#### @doc_api - API接口标记
 - **含义**: API接口标记，表示该函数或类是公共API接口
 - **用途**: 适用于对外提供的API接口，通常用于Web API、库接口等
 - **特点**: 强调这是一个API接口，可能包含API相关的特殊信息
@@ -71,12 +71,12 @@ def get_user_info(user_id: str) -> dict:
     """
     获取用户信息API
     
-    @api(description="用户信息查询接口", category="用户API", priority=3)
+    @doc_api(description="用户信息查询接口", category="用户API", priority=3)
     """
     pass
 ```
 
-#### @public - 公共接口标记
+#### @doc_public - 公共接口标记
 - **含义**: 公共接口标记，表示该函数或类是公共接口
 - **用途**: 适用于模块间调用的公共接口，但不一定是外部API
 - **特点**: 强调这是一个公共接口，供其他模块使用
@@ -86,7 +86,7 @@ def validate_input(data: dict) -> bool:
     """
     输入验证函数
     
-    @public(description="输入验证接口", category="验证工具")
+    @doc_public(description="输入验证接口", category="验证工具")
     """
     pass
 ```
@@ -102,19 +102,19 @@ def validate_input(data: dict) -> bool:
 def my_function():
     pass
 
-# @doc_me
+# @doc_util
 class MyClass:
     pass
 
-# @document
+# @doc_component
 def another_function():
     pass
 
-# @api
+# @doc_api
 def public_api():
     pass
 
-# @public
+# @doc_public
 def public_function():
     pass
 ```
@@ -136,7 +136,7 @@ class MyClass:
     """
     这是一个类
     
-    @doc_me(description="我的类", category="工具类")
+    @doc_util(description="我的类", category="工具类")
     """
     pass
 ```
@@ -151,7 +151,7 @@ class MyClass:
 def my_function():
     pass
 
-# @doc_me(description="用户管理类", category="用户管理", priority=2)
+# @doc_util(description="用户管理类", category="用户管理", priority=2)
 class UserManager:
     pass
 ```
@@ -170,7 +170,7 @@ class UserManager:
     """
     用户管理类
     
-    @doc_me(description="用户管理类", category="用户管理", priority=2)
+    @doc_util(description="用户管理类", category="用户管理", priority=2)
     """
     pass
 ```
@@ -196,46 +196,46 @@ class UserManager:
        pass
    ```
 
-2. **业务逻辑函数**: 使用 `@doc_me`
+2. **业务逻辑函数**: 使用 `@doc_util`
    ```python
    def calculate_tax(income: float) -> float:
        """
        计算税费
        
-       @doc_me(description="税费计算", category="财务", priority=1)
+       @doc_util(description="税费计算", category="财务", priority=1)
        """
        pass
    ```
 
-3. **核心功能**: 使用 `@document`
+3. **核心功能**: 使用 `@doc_component`
    ```python
    def process_order(order_data: dict) -> dict:
        """
        处理订单
        
-       @document(description="订单处理核心逻辑", category="订单管理", priority=2)
+       @doc_component(description="订单处理核心逻辑", category="订单管理", priority=2)
        """
        pass
    ```
 
-4. **对外API**: 使用 `@api`
+4. **对外API**: 使用 `@doc_api`
    ```python
    def create_user(user_data: dict) -> dict:
        """
        创建用户API
        
-       @api(description="用户创建接口", category="用户API", priority=3)
+       @doc_api(description="用户创建接口", category="用户API", priority=3)
        """
        pass
    ```
 
-5. **模块间接口**: 使用 `@public`
+5. **模块间接口**: 使用 `@doc_public`
    ```python
    def validate_config(config: dict) -> bool:
        """
        配置验证
        
-       @public(description="配置验证接口", category="配置管理")
+       @doc_public(description="配置验证接口", category="配置管理")
        """
        pass
    ```
@@ -278,6 +278,7 @@ generator = AutoDocGenerator(
 查看以下示例文件，了解完整的使用示例：
 - `example_project/comment_example.py` - 上方注释标记示例
 - `example_project/docstring_example.py` - docstring内部标记示例
+- `example_project/marker_examples.py` - 不同标记使用场景示例
 
 ## 标记优先级
 
@@ -289,19 +290,19 @@ generator = AutoDocGenerator(
 
 例如：
 ```python
-# @doc_me(description="上方注释", category="上方", priority=1)
+# @doc_util(description="上方注释", category="上方", priority=1)
 def mixed_markers():
     """
     这个函数同时使用了上方注释标记和docstring标记
     
-    @api(description="docstring中的标记", category="docstring", priority=2)
+    @doc_api(description="docstring中的标记", category="docstring", priority=2)
     
     注意：docstring中的标记会覆盖上方注释的标记
     """
     return "Mixed markers example"
 ```
 
-在这个例子中，最终会使用docstring中的`@api`标记。
+在这个例子中，最终会使用docstring中的`@doc_api`标记。
 
 ## 注意事项
 

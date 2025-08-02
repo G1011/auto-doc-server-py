@@ -25,14 +25,14 @@ def calculate_percentage(value: float, total: float) -> float:
     return (value / total) * 100 if total > 0 else 0
 
 # ============================================================================
-# @doc_me - 详细文档标记：适用于重要的业务逻辑函数或核心类
+# @doc_util - 工具函数标记：适用于重要的业务逻辑函数或核心类
 # ============================================================================
 
 def process_user_data(user_data: dict) -> dict:
     """
     处理用户数据，包括验证、清洗和格式化
     
-    @doc_me(description="用户数据处理函数", category="用户管理", priority=1)
+    @doc_util(description="用户数据处理函数", category="用户管理", priority=1)
     """
     # 验证数据
     if not user_data.get('name'):
@@ -48,7 +48,7 @@ class DataProcessor:
     """
     数据处理类，提供各种数据处理功能
     
-    @doc_me(description="数据处理核心类", category="数据处理", priority=2)
+    @doc_util(description="数据处理核心类", category="数据处理", priority=2)
     """
     
     def __init__(self, config: dict):
@@ -58,7 +58,7 @@ class DataProcessor:
         """
         批量处理数据
         
-        @doc_me(description="批量数据处理", category="批量操作", priority=1)
+        @doc_util(description="批量数据处理", category="批量操作", priority=1)
         """
         return [self.process_single(item) for item in data_list]
     
@@ -72,14 +72,14 @@ class DataProcessor:
         return data
 
 # ============================================================================
-# @document - 完整文档标记：适用于核心功能、复杂算法或重要接口
+# @doc_component - 组件标记：适用于核心功能、复杂算法或重要接口
 # ============================================================================
 
 def complex_algorithm(data: list) -> dict:
     """
     复杂算法实现，包含多个步骤和优化策略
     
-    @document(description="核心算法实现", category="算法", priority=3)
+    @doc_component(description="核心算法实现", category="算法", priority=3)
     """
     # 步骤1：数据预处理
     processed_data = preprocess_data(data)
@@ -96,7 +96,7 @@ class OrderProcessor:
     """
     订单处理系统，包含完整的订单生命周期管理
     
-    @document(description="订单处理核心系统", category="订单管理", priority=3)
+    @doc_component(description="订单处理核心系统", category="订单管理", priority=3)
     """
     
     def __init__(self):
@@ -107,7 +107,7 @@ class OrderProcessor:
         """
         创建新订单
         
-        @document(description="订单创建核心逻辑", category="订单创建", priority=2)
+        @doc_component(description="订单创建核心逻辑", category="订单创建", priority=2)
         """
         # 验证订单数据
         self.validate_order_data(order_data)
@@ -132,7 +132,7 @@ class OrderProcessor:
         """
         处理订单
         
-        @document(description="订单处理核心逻辑", category="订单处理", priority=2)
+        @doc_component(description="订单处理核心逻辑", category="订单处理", priority=2)
         """
         # 查找订单
         order = self.find_order(order_id)
@@ -152,14 +152,14 @@ class OrderProcessor:
         return order
 
 # ============================================================================
-# @api - API接口标记：适用于对外提供的API接口
+# @doc_api - API接口标记：适用于对外提供的API接口
 # ============================================================================
 
 def get_user_info(user_id: str) -> dict:
     """
     获取用户信息API
     
-    @api(description="用户信息查询接口", category="用户API", priority=3)
+    @doc_api(description="用户信息查询接口", category="用户API", priority=3)
     """
     # 验证用户ID
     if not user_id:
@@ -182,7 +182,7 @@ def create_user(user_data: dict) -> dict:
     """
     创建用户API
     
-    @api(description="用户创建接口", category="用户API", priority=3)
+    @doc_api(description="用户创建接口", category="用户API", priority=3)
     """
     # 验证输入数据
     validate_user_data(user_data)
@@ -203,7 +203,7 @@ class UserAPI:
     """
     用户API类，提供用户相关的所有API接口
     
-    @api(description="用户API集合", category="用户API", priority=3)
+    @doc_api(description="用户API集合", category="用户API", priority=3)
     """
     
     def __init__(self, db_connection):
@@ -213,7 +213,7 @@ class UserAPI:
         """
         更新用户信息API
         
-        @api(description="用户信息更新接口", category="用户API", priority=2)
+        @doc_api(description="用户信息更新接口", category="用户API", priority=2)
         """
         # 验证用户存在
         if not self.user_exists(user_id):
@@ -225,14 +225,14 @@ class UserAPI:
         return {'message': '用户信息更新成功'}
 
 # ============================================================================
-# @public - 公共接口标记：适用于模块间调用的公共接口
+# @doc_public - 公共接口标记：适用于模块间调用的公共接口
 # ============================================================================
 
 def validate_config(config: dict) -> bool:
     """
     配置验证函数
     
-    @public(description="配置验证接口", category="配置管理")
+    @doc_public(description="配置验证接口", category="配置管理")
     """
     required_fields = ['database_url', 'api_key', 'timeout']
     
@@ -246,7 +246,7 @@ def format_error_message(error: Exception) -> str:
     """
     格式化错误信息
     
-    @public(description="错误信息格式化接口", category="错误处理")
+    @doc_public(description="错误信息格式化接口", category="错误处理")
     """
     return f"错误: {type(error).__name__} - {str(error)}"
 
@@ -254,7 +254,7 @@ class Logger:
     """
     日志记录器，提供统一的日志记录接口
     
-    @public(description="日志记录接口", category="日志管理")
+    @doc_public(description="日志记录接口", category="日志管理")
     """
     
     def __init__(self, log_level: str = 'INFO'):
@@ -264,7 +264,7 @@ class Logger:
         """
         记录日志
         
-        @public(description="日志记录方法", category="日志记录")
+        @doc_public(description="日志记录方法", category="日志记录")
         """
         if self.should_log(level):
             print(f"[{level}] {message}")

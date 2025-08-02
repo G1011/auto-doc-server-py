@@ -36,12 +36,12 @@ def process_data(data: list) -> dict:
 #### 方式一：函数/类上方的注释标记
 
 ```python
-# @doc_me(description="数据处理函数", category="核心功能")
+# @doc_util(description="数据处理函数", category="核心功能")
 def process_data(data: list) -> dict:
     """处理数据并返回结果"""
     return {"result": data}
 
-# @api(description="用户管理类", category="用户管理")
+# @doc_api(description="用户管理类", category="用户管理")
 class UserManager:
     """用户管理类"""
     
@@ -58,7 +58,7 @@ def process_data(data: list) -> dict:
     """
     处理数据并返回结果
     
-    @doc_me(description="数据处理函数", category="核心功能")
+    @doc_util(description="数据处理函数", category="核心功能")
     """
     return {"result": data}
 
@@ -66,7 +66,7 @@ class UserManager:
     """
     用户管理类
     
-    @api(description="用户管理类", category="用户管理")
+    @doc_api(description="用户管理类", category="用户管理")
     """
     
     def add_user(self, user_id: str, name: str) -> bool:
@@ -141,19 +141,19 @@ def my_function():
 def my_function():
     pass
 
-# @doc_me
+# @doc_util
 class MyClass:
     pass
 
-# @document
+# @doc_component
 def another_function():
     pass
 
-# @api
+# @doc_api
 def public_api():
     pass
 
-# @public
+# @doc_public
 def public_function():
     pass
 ```
@@ -172,7 +172,7 @@ class MyClass:
     """
     这是一个类
     
-    @doc_me
+    @doc_util
     """
     pass
 ```
@@ -182,10 +182,10 @@ class MyClass:
 | 标记 | 含义 | 用途 |
 |------|------|------|
 | `@doc` | 基础文档标记 | 简单的内部函数或工具类 |
-| `@doc_me` | 详细文档标记 | 重要的业务逻辑函数或核心类 |
-| `@document` | 完整文档标记 | 核心功能、复杂算法或重要接口 |
-| `@api` | API接口标记 | 对外提供的API接口 |
-| `@public` | 公共接口标记 | 模块间调用的公共接口 |
+| `@doc_util` | 工具函数标记 | 重要的业务逻辑函数或核心类 |
+| `@doc_component` | 组件标记 | 核心功能、复杂算法或重要接口 |
+| `@doc_api` | API接口标记 | 对外提供的API接口 |
+| `@doc_public` | 公共接口标记 | 模块间调用的公共接口 |
 
 #### 带参数的标记
 
@@ -195,7 +195,7 @@ class MyClass:
 def my_function():
     pass
 
-# @doc_me(description="用户管理类", category="用户管理", priority=2)
+# @doc_util(description="用户管理类", category="用户管理", priority=2)
 class UserManager:
     pass
 ```
@@ -214,7 +214,7 @@ class UserManager:
     """
     用户管理类
     
-    @doc_me(description="用户管理类", category="用户管理", priority=2)
+    @doc_util(description="用户管理类", category="用户管理", priority=2)
     """
     pass
 ```
